@@ -4,14 +4,15 @@ import express, {
   type Response,
 } from "express";
 import { Pool } from "pg";
+import config from "./config/env";
 
 const app: Application = express();
-const port = 3000;
+const port = config.port;
 app.use(express.json());
 
+
 const pool = new Pool({
-  connectionString:
-    "postgresql://neondb_owner:npg_6Bg1bkzXiKvw@ep-tiny-field-ap2mwd3j-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+  connectionString: config.connection_string,
 });
 
 const initDB = async () => {
@@ -116,7 +117,7 @@ app.put("/api/users/:id", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
       `
-        UPDATE users SET name=$1, password=$2, age=$3, is_active=$4
+        UPDATE users SET name=COALESCE($1 name), password= COALESCE($2, password), age=COALESCE($3,age), is_active=COALESCE($4, is_active)
         WHERE id = $5
         `,
       [name, password, age, is_active, id],
@@ -127,6 +128,32 @@ app.put("/api/users/:id", async (req: Request, res: Response) => {
       message: "Users updated successfully",
       data: result.rows[0],
     });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error,
+    });
+  }
+});
+
+app.delete("/api/users/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(`DELETE FROM users WHERE id=$1 `, [id]);
+    res.status(200).json({
+      success: true,
+      message: "Users deleted successfully",
+      data: {},
+    });
+
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Users not found",
+        data: {},
+      });
+    }
   } catch (error: any) {
     res.status(500).json({
       success: false,
