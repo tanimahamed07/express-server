@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
 
+
 const createUser = async (req: Request, res: Response) => {
   //   const { name, age, email, password } = req.body;
 
