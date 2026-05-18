@@ -30,6 +30,7 @@ export const initDB = async () => {
       address TEXT,
       phone VARCHAR(15),
       gender VARCHAR(10),
+      role VARCHAR(10) DEFAULT 'user'
 
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()

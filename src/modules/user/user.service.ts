@@ -3,13 +3,13 @@ import type { IUser } from "./user.interface";
 
 
 const createUserIntoDB = async (payload: IUser) => {
-  const { name, age, email, password } = payload;
+  const { name, age, email, password, role } = payload;
 
   const result = await pool.query(
     `
-    INSERT INTO users(name, email, password, age) VALUES($1, $2, $3, $4)
+    INSERT INTO users(name, email, password, age) VALUES($1, $2, $3, $4, COALESCE($5, user))
     RETURNING * `,
-    [name, email, password, age],
+    [name, email, password, age, role],
   );
   return result;
 };

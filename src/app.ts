@@ -7,8 +7,9 @@ import { initDB, pool } from "./db";
 import { userRoute } from "./modules/user/user.route";
 import { profileRoute } from "./modules/profile/profile.route";
 import { authRoute } from "./modules/auth/auth.route";
-
+import cookieParser from "cookie-parser";
 const app: Application = express();
+app.use(cookieParser())
 app.use(express.json());
 
 initDB();
@@ -19,6 +20,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/users", userRoute);
 app.use("/api/profile", profileRoute);
-app.use('/api/auth', authRoute)
+app.use("/api/auth", authRoute);
 
 export default app;
