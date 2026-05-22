@@ -33,7 +33,7 @@ const updateUserFromDB = async (payload: IUser, id: string) => {
 
   const result = await pool.query(
     `
-        UPDATE users SET name=COALESCE($1 name), password= COALESCE($2, password), age=COALESCE($3,age), is_active=COALESCE($4, is_active)
+        UPDATE users SET name=COALESCE($1, name), password= COALESCE($2, password), age=COALESCE($3,age), is_active=COALESCE($4, is_active)
         WHERE id = $5
         `,
     [name, password, age, is_active, id],

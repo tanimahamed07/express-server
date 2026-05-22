@@ -4,8 +4,8 @@ type TResponse<T> = {
     statusCode: number;
     success: boolean;
     message: string;
-    data?: T;              // 👈 লজিক: ডেটা যাই হোক না কেন, তার টাইপ হবে এই 'T'
-    error?: any;          // (ঐচ্ছিক)
+    data?: T;              
+    error?: any;          
 }
 
 
